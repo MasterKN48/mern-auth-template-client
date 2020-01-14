@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-//import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Layout from "../layout/Layout";
 import axios from "axios";
 
-const Signup = () => {
+const Signin = () => {
   const [values, setValues] = useState({
-    name: "",
     email: "",
     password: "",
-    msg: ""
+    msg: "",
+    redirect: false
   });
   const change = e => {
     setValues({
@@ -20,45 +20,34 @@ const Signup = () => {
     e.preventDefault();
     setValues({ ...values, msg: "Submitting" });
     axios
-      .post(`/signup`, values)
+      .post(`/signin`, values)
       .then(res => {
+        console.log(res.data);
+        // save userinfo in localstorage and token in cookie for safer
         setValues({
           ...values,
-          name: "",
           password: "",
           email: "",
-          msg: res.data.msg
+          msg: "SignIn Success",
+          redirect: true
         });
       })
       .catch(err => {
+        console.log(err.response);
         setValues({
           ...values,
-          name: "",
           password: "",
           email: "",
-          msg: err.response.data.error
+          msg: err.response.data
         });
       });
   };
   return (
     <Layout>
+      {values.redirect ? <Redirect to="/dashboard" /> : null}
       <p className="alert-info">{values.msg}</p>
-      <h4>Signup</h4>
+      <h4>Signin</h4>
       <form className="container center" onSubmit={submit}>
-        <div className="form-group">
-          <label htmlFor="exampleInputEmail1">Full Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={change}
-            className="form-control"
-            required
-            value={values.name}
-            id="exampleInputEmail2"
-            aria-describedby="emailHelp"
-            placeholder="Enter full name"
-          />
-        </div>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Email address</label>
           <input
@@ -95,4 +84,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

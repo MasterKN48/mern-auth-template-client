@@ -20,11 +20,11 @@ const Layout = ({ children }) => {
         </li>
         <li className="nav-item">
           <NavLink
-            to="/login"
+            to="/signin"
             className="nav-link"
             activeClassName="nav-link active"
           >
-            Login
+            Signin
           </NavLink>
         </li>
         <li className="nav-item">
