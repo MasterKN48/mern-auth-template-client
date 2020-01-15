@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Layout from "../layout/Layout";
 import axios from "axios";
 import { authenitcate, isAuth } from "./helpers";
-const Signin = () => {
+const Signin = ({ history }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -31,6 +31,9 @@ const Signin = () => {
             msg: "SignIn Success",
             redirect: true
           });
+          isAuth() && isAuth.role === "admin"
+            ? history.push("/admin")
+            : history.push("/dashboard");
         });
       })
       .catch(err => {
@@ -45,7 +48,6 @@ const Signin = () => {
   };
   return (
     <Layout>
-      {isAuth() ? <Redirect to="/" /> : null}
       <p className="alert-info">{values.msg}</p>
       <h4>Signin</h4>
       <form className="container center" onSubmit={submit}>
@@ -85,4 +87,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default withRouter(Signin);
