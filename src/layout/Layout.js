@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { NavLink, withRouter } from "react-router-dom";
+import { NavLink, withRouter, Link } from "react-router-dom";
 import { isAuth, signout } from "../auth/helpers";
 
 const Layout = ({ children, history }) => {
@@ -19,9 +19,18 @@ const Layout = ({ children, history }) => {
             Home
           </NavLink>
         </li>
-        {isAuth() && (
+        {isAuth() && isAuth().role === "admin" && (
           <li className="nav-item">
-            <span className="nav-link active">{isAuth().name}</span>
+            <Link to="/admin" className="nav-link active">
+              {isAuth().name}
+            </Link>
+          </li>
+        )}
+        {isAuth() && isAuth().role === "user" && (
+          <li className="nav-item">
+            <Link to="/dashboard" className="nav-link active">
+              {isAuth().name}
+            </Link>
           </li>
         )}
         {isAuth() ? (
