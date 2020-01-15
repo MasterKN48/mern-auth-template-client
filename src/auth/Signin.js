@@ -3,6 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import Layout from "../layout/Layout";
 import axios from "axios";
 import { authenitcate, isAuth } from "./helpers";
+import GLogin from "./GoogleLogin";
 const Signin = ({ history }) => {
   const [values, setValues] = useState({
     email: "",
@@ -14,6 +15,13 @@ const Signin = ({ history }) => {
     setValues({
       ...values,
       [e.target.name]: e.target.value
+    });
+  };
+  const informParent = res => {
+    authenitcate(res, () => {
+      isAuth() && isAuth.role === "admin"
+        ? history.push("/admin")
+        : history.push("/dashboard");
     });
   };
   const submit = e => {
@@ -83,6 +91,7 @@ const Signin = ({ history }) => {
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
+        <GLogin informParent={informParent} />
       </form>
     </Layout>
   );
