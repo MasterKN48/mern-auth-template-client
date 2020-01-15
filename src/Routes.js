@@ -8,6 +8,8 @@ import PrivateRoute from "./auth/PrivateRoute";
 import Dashboard from "./layout/Dashboard";
 import AdminDashboard from "./layout/AdminDashboard";
 import AdminRoute from "./auth/AdminRoute";
+import ForgotPassword from "./auth/ForgotPassword";
+import ResetPassword from "./auth/ResetPassword";
 const Routes = () => {
   return (
     <Router>
@@ -15,6 +17,8 @@ const Routes = () => {
         <Route path="/" exact component={App} />
         <Route path="/signup" component={Signup} />
         <Route path="/signin" component={Signin} />
+        <Route path="/auth/password/forgot" component={ForgotPassword} />
+        <Route path="/auth/password/reset/:token" component={ResetPassword} />
         <Route path="/auth/activate/:token" component={Activate} />
         <AdminRoute path="/admin" exact component={AdminDashboard} />
         <PrivateRoute path="/dashboard" exact component={Dashboard} />

@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { withRouter, Link } from "react-router-dom";
 import Layout from "../layout/Layout";
 import axios from "axios";
-import { authenitcate, isAuth } from "./helpers";
-const Signin = ({ history }) => {
+const ForgotPassword = ({ history }) => {
   const [values, setValues] = useState({
     email: "",
-    password: "",
-    msg: "",
-    redirect: false
+    msg: ""
   });
   const change = e => {
     setValues({
@@ -20,27 +16,20 @@ const Signin = ({ history }) => {
     e.preventDefault();
     setValues({ ...values, msg: "Submitting" });
     axios
-      .post(`/signin`, values)
+      .put(`/forgot-password`, values)
       .then(res => {
+        console.log(res);
         // save userinfo in localstorage and token in cookie for safer
-        authenitcate(res, () => {
-          setValues({
-            ...values,
-            password: "",
-            email: "",
-            msg: "SignIn Success",
-            redirect: true
-          });
-          isAuth() && isAuth.role === "admin"
-            ? history.push("/admin")
-            : history.push("/dashboard");
+        setValues({
+          ...values,
+          email: "",
+          msg: "Success,Link Send to mail to reset password"
         });
       })
       .catch(err => {
         console.log(err.response);
         setValues({
           ...values,
-          password: "",
           email: "",
           msg: err.response.data.error
         });
@@ -49,7 +38,7 @@ const Signin = ({ history }) => {
   return (
     <Layout>
       <p className="alert-info">{values.msg}</p>
-      <h4>Signin</h4>
+      <h4>ForgotPassword</h4>
       <form className="container center" onSubmit={submit}>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Email address</label>
@@ -67,19 +56,6 @@ const Signin = ({ history }) => {
             We'll never share your email with anyone else.
           </small>
         </div>
-        <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={change}
-            values={values.password}
-            className="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-          />
-        </div>
-        <Link to="/auth/password/forgot">Forgot Password</Link>
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
@@ -88,4 +64,4 @@ const Signin = ({ history }) => {
   );
 };
 
-export default withRouter(Signin);
+export default ForgotPassword;
