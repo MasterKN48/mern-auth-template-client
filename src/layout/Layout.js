@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
+import { isAuth, signout } from "../auth/helpers";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, history }) => {
   const nav = () => (
     <>
       <ul
@@ -18,24 +19,47 @@ const Layout = ({ children }) => {
             Home
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink
-            to="/signin"
-            className="nav-link"
-            activeClassName="nav-link active"
-          >
-            Signin
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            to="/signup"
-            className="nav-link"
-            activeClassName="nav-link active"
-          >
-            Signup
-          </NavLink>
-        </li>
+        {isAuth() && (
+          <li className="nav-item">
+            <span className="nav-link active">{isAuth().name}</span>
+          </li>
+        )}
+        {isAuth() ? (
+          <li className="nav-item">
+            <span
+              className="nav-link active"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                signout(() => {
+                  history.push("/");
+                });
+              }}
+            >
+              Signout
+            </span>
+          </li>
+        ) : (
+          <>
+            <li className="nav-item">
+              <NavLink
+                to="/signin"
+                className="nav-link"
+                activeClassName="nav-link active"
+              >
+                Signin
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/signup"
+                className="nav-link"
+                activeClassName="nav-link active"
+              >
+                Signup
+              </NavLink>
+            </li>
+          </>
+        )}
       </ul>
     </>
   );
@@ -47,4 +71,4 @@ const Layout = ({ children }) => {
   );
 };
 
-export default Layout;
+export default withRouter(Layout);

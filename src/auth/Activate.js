@@ -26,7 +26,6 @@ const Activate = ({ match }) => {
     axios
       .post("/account-activation", { token })
       .then(res => {
-        console.log(res);
         setValues({
           ...values,
           msg: res.data.msg,
@@ -36,12 +35,10 @@ const Activate = ({ match }) => {
       .catch(err => {
         setValues({ ...values, msg: err.response.data.error });
       });
-    if (values.redirect) {
-      return <Redirect to="/signin" />;
-    }
   };
   const activationLink = () => (
     <div className="text-center">
+      {values.redirect ? <Redirect to="/signin" /> : null}
       <h2 className="p-5 text-center">Hey {name}, ready to Activate Account</h2>
       <p>{values.msg}</p>
       <button className="btn btn-outline-primary" onClick={submit}>

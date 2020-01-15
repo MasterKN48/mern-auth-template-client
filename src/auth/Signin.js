@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import Layout from "../layout/Layout";
 import axios from "axios";
-
+import { authenitcate, isAuth } from "./helpers";
 const Signin = () => {
   const [values, setValues] = useState({
     email: "",
@@ -22,14 +22,15 @@ const Signin = () => {
     axios
       .post(`/signin`, values)
       .then(res => {
-        console.log(res.data);
         // save userinfo in localstorage and token in cookie for safer
-        setValues({
-          ...values,
-          password: "",
-          email: "",
-          msg: "SignIn Success",
-          redirect: true
+        authenitcate(res, () => {
+          setValues({
+            ...values,
+            password: "",
+            email: "",
+            msg: "SignIn Success",
+            redirect: true
+          });
         });
       })
       .catch(err => {
@@ -38,13 +39,13 @@ const Signin = () => {
           ...values,
           password: "",
           email: "",
-          msg: err.response.data
+          msg: err.response.data.error
         });
       });
   };
   return (
     <Layout>
-      {values.redirect ? <Redirect to="/dashboard" /> : null}
+      {isAuth() ? <Redirect to="/" /> : null}
       <p className="alert-info">{values.msg}</p>
       <h4>Signin</h4>
       <form className="container center" onSubmit={submit}>
